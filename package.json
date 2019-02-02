@@ -1,0 +1,27 @@
+{
+  "name": "codechallenge",
+  "version": "1.0.0",
+  "description": "JS utility to remove duplicate records in a collection",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mysteryUser97214/CodeChallenge.git"
+  },
+  "author": "Robin Miller <rmillerpdx@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mysteryUser97214/CodeChallenge/issues"
+  },
+  "homepage": "https://github.com/mysteryUser97214/CodeChallenge#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "jest": "^24.0.0"
+  }
+}
