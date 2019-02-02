@@ -2,4 +2,4 @@ function removeDuplicates(records) {
   return records;
 }
 
-module.exports = removeDuplicates;
+export default removeDuplicates;

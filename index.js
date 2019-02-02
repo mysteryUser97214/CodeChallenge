@@ -1,5 +1,5 @@
-const removeDuplicates = require('./util/removeDuplicates');
-const sampleData = require('./data/leads.json');
+import sampleData from './data/leads.json';
+import removeDuplicates from './util/removeDuplicates';
 
 const input = sampleData.leads;
 

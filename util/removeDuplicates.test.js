@@ -1,4 +1,4 @@
-const removeDuplicates = require('./removeDuplicates');
+import removeDuplicates from './removeDuplicates';
 
 describe('Duplicate removal utility', () => {
   it('Function should exist', () => {
