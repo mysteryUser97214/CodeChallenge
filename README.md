@@ -1,7 +1,7 @@
 
-## Code Challenge
+# Code Challenge
 
-Take a variable number of identically structured json records and de-duplicate the set.
+**Objective:** Take a variable number of identically structured json records and de-duplicate the set.
 
 **Records are considered duplicates if:**
  - `_id` properties are the same
@@ -12,11 +12,13 @@ Take a variable number of identically structured json records and de-duplicate t
  **If dates are equal** Give preference to the latest record in the list.
 
 
-**Valid input is assumed. All records in a collection will have an identical schema and contain at least the following properties**
-    
+## Assumptions
+**1. Valid input is assumed. All records in a collection will be identical and contain at least the following properties**
+
     "_id": <String>,
-    
+
     "email": <String>,
-    
+
     "entryDate": <Date>
-    
+
+**2. A collection should be returned in the same order as it was given**
