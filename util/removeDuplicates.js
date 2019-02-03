@@ -1,5 +1,8 @@
 function _compareDates(prev, next) {
-  return Date(prev) > Date(next);
+  const dateA = new Date(prev);
+  const dateB = new Date(next);
+
+  return dateA > dateB;
 }
 
 function removeDuplicates(records) {
