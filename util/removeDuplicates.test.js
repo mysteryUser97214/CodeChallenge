@@ -3,12 +3,12 @@ import removeDuplicates from './removeDuplicates';
 
 describe('Duplicate removal utility', () => {
   it('Should exist', () => {
-    expect(typeof removeDuplicates).toEqual('function');
+    expect(typeof removeDuplicates).toBe('function');
   });
 
   it('Should output a valid object', () => {
-    const result = removeDuplicates({});
-    expect(typeof result).toEqual('object');
+    const result = removeDuplicates([]);
+    expect(typeof result).toBe('object');
   });
 
   it('Should remove a record with a duplicate _id', () => {
@@ -34,6 +34,32 @@ describe('Duplicate removal utility', () => {
     ];
 
     const result = removeDuplicates(data);
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
+  });
+
+  it('Should remove a record with a duplicate email', () => {
+    const data = [
+      {
+        _id: '123',
+        email: 'rosie@rosie.com',
+        entryDate: '2014-06-07T17:30:20+00:00',
+      },
+      {
+        _id: '456',
+        email: 'rosie@rosie.com',
+        entryDate: '2014-05-07T17:30:20+00:00',
+      },
+    ];
+
+    const expected = [
+      {
+        _id: '123',
+        email: 'rosie@rosie.com',
+        entryDate: '2014-06-07T17:30:20+00:00',
+      },
+    ];
+
+    const result = removeDuplicates(data);
+    expect(result).toEqual(expected);
   });
 });
