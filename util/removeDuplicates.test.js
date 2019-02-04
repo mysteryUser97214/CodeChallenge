@@ -1,5 +1,5 @@
 import removeDuplicates from './removeDuplicates';
-// import { leads } from '../data/leads.json';
+import testData from './testData.json';
 
 describe('Duplicate removal utility', () => {
   it('Should exist', () => {
@@ -138,6 +138,11 @@ describe('Duplicate removal utility', () => {
   it('Should handle duplicate properties with identical entryDates', () => {
     const data = [
       {
+        _id: '456',
+        email: 'g.freeman@blackmesa.tk',
+        entryDate: '2015-06-07T17:30:20+00:00',
+      },
+      {
         _id: '123',
         email: 'bob@bob.com',
         entryDate: '2014-06-07T17:30:20+00:00',
@@ -146,11 +151,6 @@ describe('Duplicate removal utility', () => {
         _id: '123',
         email: 'hank@globex.com',
         entryDate: '2014-06-07T17:30:20+00:00',
-      },
-      {
-        _id: '456',
-        email: 'g.freeman@blackmesa.tk',
-        entryDate: '2015-06-07T17:30:20+00:00',
       },
       {
         _id: '789',
@@ -174,5 +174,10 @@ describe('Duplicate removal utility', () => {
 
     const results = removeDuplicates(data);
     expect(results).toEqual(expected);
+  });
+
+  it('Should process leads.json as expected', () => {
+    const results = removeDuplicates(testData.leads);
+    expect(results).toEqual(testData.expected);
   });
 });

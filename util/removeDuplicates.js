@@ -14,25 +14,28 @@ function removeDuplicates(records) {
     const { _id, email, entryDate } = record;
 
     if (!recordsById[_id] && !recordsByEmail[email]) {
-      // if both id and email are new
+      // If both id and email are new
       recordsById[_id] = { data: { ...record }, index };
       recordsByEmail[email] = { data: { ...record }, index };
       output[index] = { ...record };
     } else {
       if (recordsById[_id] && _compareDates(entryDate, recordsById[_id].data.entryDate)) {
-        // if id already exists and new record has newer or equal date
+        // If id already exists and new record has newer or equal date
         delete output[recordsById[_id].index];
+        recordsById[_id] = { data: { ...record }, index };
         output[index] = { ...record };
       }
 
       if (recordsByEmail[email] && _compareDates(entryDate, recordsByEmail[email].data.entryDate)) {
-        // if email already exists and new record has a newer or equal date
+        // If email already exists and new record has a newer or equal date
         delete output[recordsByEmail[email].index];
+        recordsByEmail[email] = { data: { ...record }, index };
         output[index] = { ...record };
       }
     }
   });
 
+  // Remove empty indices
   return output.filter(e => !!e);
 }
 
