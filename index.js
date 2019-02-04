@@ -1,8 +1,20 @@
-import sampleData from './data/leads.json';
+import fs from 'fs';
+import util from 'util';
 import removeDuplicates from './util/removeDuplicates';
 
-const input = sampleData.leads;
+const readDirectory = util.promisify(fs.readdir);
+const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
 
-const output = removeDuplicates(input);
+async function deDupe() {
+  const allFiles = await readDirectory('./input/');
 
-console.log(output);
+  allFiles.forEach(async (file) => {
+    const input = await readFile(`./input/${file}`);
+    const output = removeDuplicates(JSON.parse(input));
+
+    writeFile(`./output/${file}`, JSON.stringify(output, null, 1));
+  });
+}
+
+deDupe();
