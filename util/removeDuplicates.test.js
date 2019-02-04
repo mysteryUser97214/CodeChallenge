@@ -38,7 +38,7 @@ describe('Duplicate removal utility', () => {
     };
 
     const results = removeDuplicates(data);
-    expect(results).toEqual(expected);
+    expect(results.data).toEqual(expected);
   });
 
   it('Should remove a record with a duplicate email', () => {
@@ -68,7 +68,7 @@ describe('Duplicate removal utility', () => {
     };
 
     const results = removeDuplicates(data);
-    expect(results).toEqual(expected);
+    expect(results.data).toEqual(expected);
   });
 
   it('Should handle records with both duplicate ids and emails', () => {
@@ -113,7 +113,7 @@ describe('Duplicate removal utility', () => {
     };
 
     const results = removeDuplicates(data);
-    expect(results).toEqual(expected);
+    expect(results.data).toEqual(expected);
   });
 
   it('Should handle individual records with multiple duplicate properties', () => {
@@ -148,7 +148,7 @@ describe('Duplicate removal utility', () => {
     };
 
     const results = removeDuplicates(data);
-    expect(results).toEqual(expected);
+    expect(results.data).toEqual(expected);
   });
 
   it('Should handle duplicate properties with identical entryDates', () => {
@@ -193,11 +193,11 @@ describe('Duplicate removal utility', () => {
     };
 
     const results = removeDuplicates(data);
-    expect(results).toEqual(expected);
+    expect(results.data).toEqual(expected);
   });
 
   it('Should process leads.json as expected', () => {
     const results = removeDuplicates(testData.leads);
-    expect(results).toEqual(testData.expected);
+    expect(results.data).toEqual(testData.expected);
   });
 });
