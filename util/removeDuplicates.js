@@ -5,7 +5,10 @@ function _compareDates(prev, next) {
   return dateA >= dateB;
 }
 
-function removeDuplicates(records) {
+function removeDuplicates(data) {
+  const title = Object.keys(data)[0];
+  const records = data[title];
+
   const recordsById = {};
   const recordsByEmail = {};
   const output = [];
@@ -36,7 +39,7 @@ function removeDuplicates(records) {
   });
 
   // Remove empty indices
-  return output.filter(e => !!e);
+  return { [title]: output.filter(e => !!e) };
 }
 
 export default removeDuplicates;
