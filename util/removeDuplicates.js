@@ -5,9 +5,9 @@ function _compareDates(prev, next) {
   return dateA >= dateB;
 }
 
-function _writeChange(oldRecord, newRecord, dupeProp) {
+function _writeChange(oldRecord, newRecord, dupeProp, newIndex, oldIndex) {
   const oldKeys = Object.keys(oldRecord);
-  const changeText = `Duplicate ${dupeProp} property detected!\nOld Record:\n${JSON.stringify(oldRecord, null, 1)}\n\nNew Record:\n${JSON.stringify(newRecord, null, 1)}\n\nChanges:\n`;
+  const changeText = `Duplicate ${dupeProp} property "${oldRecord[dupeProp]}" detected!\nRemoving record at index ${oldIndex}:\n${JSON.stringify(oldRecord, null, 1)}\n\nAdding new Record at index ${newIndex}:\n${JSON.stringify(newRecord, null, 1)}\n\nChanges:\n`;
 
   const diff = oldKeys.reduce((log, key) => {
     if (oldRecord[key] !== newRecord[key]) {
@@ -16,7 +16,7 @@ function _writeChange(oldRecord, newRecord, dupeProp) {
     return log;
   }, changeText);
 
-  return diff.concat('\n\n\n');
+  return diff.concat('\n\n');
 }
 
 function removeDuplicates(data) {
@@ -43,7 +43,7 @@ function removeDuplicates(data) {
       if (recordsById[_id] && _compareDates(entryDate, recordsById[_id].data.entryDate)) {
         // If id already exists and new record has newer or equal date
 
-        changeLog.push(_writeChange(recordsById[_id].data, record, 'id'));
+        changeLog.push(_writeChange(recordsById[_id].data, record, '_id', index, recordsById[_id].index));
 
         delete output[recordsById[_id].index];
         recordsById[_id] = { data: { ...record }, index };
@@ -53,7 +53,7 @@ function removeDuplicates(data) {
       if (recordsByEmail[email] && _compareDates(entryDate, recordsByEmail[email].data.entryDate)) {
         // If email already exists and new record has a newer or equal date
 
-        changeLog.push(_writeChange(recordsByEmail[email].data, record, 'email'));
+        changeLog.push(_writeChange(recordsByEmail[email].data, record, 'email', index, recordsByEmail[email].index));
 
         delete output[recordsByEmail[email].index];
         recordsByEmail[email] = { data: { ...record }, index };
