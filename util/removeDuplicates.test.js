@@ -7,7 +7,7 @@ describe('Duplicate removal utility', () => {
   });
 
   it('Should output a valid object', () => {
-    const results = removeDuplicates(testData.leads);
+    const results = removeDuplicates(testData.leads.data);
     expect(typeof results).toBe('object');
   });
 
@@ -197,7 +197,7 @@ describe('Duplicate removal utility', () => {
   });
 
   it('Should process leads.json as expected', () => {
-    const results = removeDuplicates(testData.leads);
-    expect(results.data).toEqual(testData.expected);
+    const results = removeDuplicates(testData.leads.data);
+    expect(results.data).toEqual(testData.leads.expected);
   });
 });

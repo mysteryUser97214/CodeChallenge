@@ -1,4 +1,3 @@
-import leads from './leads';
-import expected from './expected';
+import leads from './leads/index';
 
-export default { leads, expected };
+export default { leads };
