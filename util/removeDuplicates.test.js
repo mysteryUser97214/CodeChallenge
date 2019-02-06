@@ -196,6 +196,16 @@ describe('Duplicate removal utility', () => {
     expect(results.data).toEqual(expected);
   });
 
+  it('Should handle edge case scenario', () => {
+    const results = removeDuplicates(testData.edgeCase.data);
+    expect(results.data).toEqual(testData.edgeCase.expected);
+  });
+
+  it('Should process friends.json as expected', () => {
+    const results = removeDuplicates(testData.friends.data);
+    expect(results.data).toEqual(testData.friends.expected);
+  });
+
   it('Should process leads.json as expected', () => {
     const results = removeDuplicates(testData.leads.data);
     expect(results.data).toEqual(testData.leads.expected);

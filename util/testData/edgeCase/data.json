@@ -1,0 +1,17 @@
+{"stuff": [
+  {
+    "_id": "ABCD",
+    "email": "apple@apple.com",
+    "entryDate": "2012-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "apple@apple.com",
+  "entryDate": "2013-05-07T17:33:20+00:00"
+  }]
+  }

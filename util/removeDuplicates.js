@@ -23,7 +23,6 @@ function removeDuplicates(data) {
   const title = Object.keys(data)[0];
   const records = data[title];
 
-  // TODO: values should only be record indices, not the whole record
   const recordsById = {};
   const recordsByEmail = {};
   const output = [];
@@ -45,8 +44,12 @@ function removeDuplicates(data) {
 
         changeLog.push(_writeChange(recordsById[_id].data, record, '_id', index, recordsById[_id].index));
 
+        const oldEmail = recordsById[_id].data.email;
+        delete recordsByEmail[oldEmail];
         delete output[recordsById[_id].index];
+
         recordsById[_id] = { data: { ...record }, index };
+
         output[index] = { ...record };
       }
 
@@ -55,18 +58,21 @@ function removeDuplicates(data) {
 
         changeLog.push(_writeChange(recordsByEmail[email].data, record, 'email', index, recordsByEmail[email].index));
 
+        const oldId = recordsByEmail[email].data._id;
+        delete recordsById[oldId];
         delete output[recordsByEmail[email].index];
+
         recordsByEmail[email] = { data: { ...record }, index };
         output[index] = { ...record };
       }
     }
   });
 
+  // Filter output to remove empty indices
   const newData = { [title]: output.filter(e => !!e) };
   changeLog.push(`\n\nNew Collection:\n${JSON.stringify(newData, null, 1)}`);
 
   return {
-    // Remove empty indices
     data: newData,
     changeLog,
   };

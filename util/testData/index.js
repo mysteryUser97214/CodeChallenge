@@ -1,3 +1,5 @@
-import leads from './leads/index';
+import leads from './leads';
+import friends from './friends';
+import edgeCase from './edgeCase';
 
-export default { leads };
+export default { leads, friends, edgeCase };
