@@ -14,10 +14,10 @@ async function deDupe() {
     try {
       const input = await readFile(`./input/${file}`);
       const output = removeDuplicates(JSON.parse(input));
-      const log = generateLog(output.changeLog);
+      const log = generateLog(output.log);
       await writeFile(`./output/${file}.log`, log);
       await writeFile(`./output/${file}`, JSON.stringify(output.data, null, 1));
-      console.log(`File ${file} completed! ${output.changeLog.length} Change(s) made. See file ${file}.log in the output folder for a full list of changes.`);
+      console.log(`File /output/${file} created! ${output.log.changes.length} Duplicate record(s) removed. See file /output/${file}.log a full list of changes.\n\n`);
     } catch (err) {
       throw Error(`Could not convert file "${file}"\n${err}`);
     }
@@ -26,4 +26,4 @@ async function deDupe() {
   return Promise.all(allPromises);
 }
 
-deDupe().then(() => console.log('Done!')).catch(err => console.log(err));
+deDupe().then(() => console.log('Done! All files De-Duplicated!\n')).catch(err => console.log(err));

@@ -5,9 +5,17 @@ function _compareDates(prev, next) {
   return dateA >= dateB;
 }
 
-function _writeChange(oldRecord, newRecord, dupeProp, newIndex, oldIndex) {
+function _writeChange(data) {
+  const {
+    oldRecord,
+    newRecord,
+    dupeProp,
+    oldIndex,
+    newIndex,
+  } = data;
+
   const oldKeys = Object.keys(oldRecord);
-  const changeText = `Duplicate ${dupeProp} property "${oldRecord[dupeProp]}" detected!\nRemoving record at index ${oldIndex}:\n${JSON.stringify(oldRecord, null, 1)}\n\nAdding new Record at index ${newIndex}:\n${JSON.stringify(newRecord, null, 1)}\n\nChanges:\n`;
+  const changeText = `Duplicate ${dupeProp} property "${oldRecord[dupeProp]}" detected!\n\nRemoving record at index ${oldIndex}:\n${JSON.stringify(oldRecord, null, 1)}\n\nAdding new Record at index ${newIndex}:\n${JSON.stringify(newRecord, null, 1)}\n\nChanges:\n`;
 
   const diff = oldKeys.reduce((log, key) => {
     if (oldRecord[key] !== newRecord[key]) {
@@ -26,9 +34,10 @@ function removeDuplicates(data) {
   const recordsById = {};
   const recordsByEmail = {};
   const output = [];
-  const changeLog = [];
-
-  changeLog.push(`Original Collection:\n${JSON.stringify(data, null, 1)}\n\n`);
+  const log = {
+    sourceRecord: data,
+    changes: [],
+  };
 
   records.forEach((record, index) => {
     const { _id, email, entryDate } = record;
@@ -42,7 +51,14 @@ function removeDuplicates(data) {
       if (recordsById[_id] && _compareDates(entryDate, recordsById[_id].data.entryDate)) {
         // If id already exists and new record has newer or equal date
 
-        changeLog.push(_writeChange(recordsById[_id].data, record, '_id', index, recordsById[_id].index));
+        const changeLogPayload = {
+          oldRecord: recordsById[_id].data,
+          newRecord: record,
+          dupeProp: '_id',
+          newIndex: index,
+          oldIndex: recordsById[_id].index,
+        };
+        log.changes.push(_writeChange(changeLogPayload));
 
         const oldEmail = recordsById[_id].data.email;
         delete recordsByEmail[oldEmail];
@@ -56,7 +72,14 @@ function removeDuplicates(data) {
       if (recordsByEmail[email] && _compareDates(entryDate, recordsByEmail[email].data.entryDate)) {
         // If email already exists and new record has a newer or equal date
 
-        changeLog.push(_writeChange(recordsByEmail[email].data, record, 'email', index, recordsByEmail[email].index));
+        const changeLogPayload = {
+          oldRecord: recordsByEmail[email].data,
+          newRecord: record,
+          dupeProp: 'email',
+          newIndex: index,
+          oldIndex: recordsByEmail[email].index,
+        };
+        log.changes.push(_writeChange(changeLogPayload));
 
         const oldId = recordsByEmail[email].data._id;
         delete recordsById[oldId];
@@ -70,11 +93,11 @@ function removeDuplicates(data) {
 
   // Filter output to remove empty indices
   const newData = { [title]: output.filter(e => !!e) };
-  changeLog.push(`\n\nNew Collection:\n${JSON.stringify(newData, null, 1)}`);
+  log.outputRecord = newData;
 
   return {
     data: newData,
-    changeLog,
+    log,
   };
 }
 
