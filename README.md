@@ -7,7 +7,12 @@
  2. `git clone https://github.com/mysteryUser97214/CodeChallenge.git`
  3. `cd CodeChallenge`
  4. `npm i`
- 5. `npm start`
+
+## How to Use
+1. Add any number of properly formatted `json` files to the /input/ folder. Make sure they are properly formatted (see "Assumptions" section below). Input folder contains `leads.json` by default.
+2. `npm start`
+3. Converted `json` file and a corresponding `<filename>.json.log` file will be written to the /output/ folder.
+
 
 **Records are considered duplicates if:**
  - `_id` properties are the same
@@ -19,7 +24,15 @@
 
 
 ## Assumptions
-**1. Valid input is assumed. All records in a collection will be identical and contain at least the following properties**
+**1. Valid input is assumed.**
+Function expects input data to be formatted as such:
+
+    {"Collection Title": [
+	    <Record  1>,
+	    <Record  2>,
+    ]}
+
+All records in a collection will be identical and contain at least the following properties:
 
     "_id": <String>,
 
@@ -27,4 +40,4 @@
 
     "entryDate": <Date>
 
-**2. A collection should be returned in the same order as it was given**
+**2.  A collection should be returned in the same order as it was given**
