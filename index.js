@@ -1,7 +1,7 @@
 import fs from 'fs';
 import util from 'util';
-import removeDuplicates from './util/removeDuplicates';
-import generateLog from './util/generateLog';
+import removeDuplicates from './utils/removeDuplicates';
+import generateLog from './utils/generateLog';
 
 const readDirectory = util.promisify(fs.readdir);
 const readFile = util.promisify(fs.readFile);
@@ -17,7 +17,7 @@ async function deDupe() {
       const log = generateLog(output.log);
       await writeFile(`./output/${file}.log`, log);
       await writeFile(`./output/${file}`, JSON.stringify(output.data, null, 1));
-      console.log(`File /output/${file} created! ${output.log.changes.length} Duplicate record(s) removed. See file /output/${file}.log a full list of changes.\n\n`);
+      console.log(`File /output/${file} created! ${output.log.changes.length} Duplicate record(s) removed. See file /output/${file}.log for a full list of changes.\n\n`);
     } catch (err) {
       throw Error(`Could not convert file "${file}"\n${err}`);
     }
