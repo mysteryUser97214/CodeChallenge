@@ -1,0 +1,23 @@
+{"stuff": [
+  {
+    "_id": "ABCD",
+    "email": "banana@banana.com",
+    "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+    "_id": "1234",
+    "email": "banana@banana.com",
+    "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  }
+  ]
+  }
