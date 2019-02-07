@@ -48,7 +48,35 @@ function removeDuplicates(data) {
       recordsByEmail[email] = { data: { ...record }, index };
       output[index] = { ...record };
     } else {
-      if (recordsById[_id] && _compareDates(entryDate, recordsById[_id].data.entryDate)) {
+      const hasDuplicateId = recordsById[_id] && _compareDates(entryDate, recordsById[_id].data.entryDate);
+      const hasDuplicateEmail = recordsByEmail[email] && _compareDates(entryDate, recordsByEmail[email].data.entryDate);
+
+      if (hasDuplicateId && hasDuplicateEmail) {
+        // If both id and email are duplicates
+        delete output[recordsById[_id].index];
+        delete output[recordsByEmail[email].index];
+
+        log.changes.push(_writeChange({
+          oldRecord: recordsById[_id].data,
+          newRecord: record,
+          dupeProp: '_id',
+          newIndex: index,
+          oldIndex: recordsById[_id].index,
+        }));
+
+        log.changes.push(_writeChange({
+          oldRecord: recordsByEmail[email].data,
+          newRecord: record,
+          dupeProp: 'email',
+          newIndex: index,
+          oldIndex: recordsByEmail[email].index,
+        }));
+
+        recordsById[_id] = { data: { ...record }, index };
+        recordsByEmail[email] = { data: { ...record }, index };
+
+        output[index] = { ...record };
+      } else if (hasDuplicateId) {
         // If id already exists and new record has newer or equal date
 
         const changeLogPayload = {
@@ -65,13 +93,10 @@ function removeDuplicates(data) {
         delete output[recordsById[_id].index];
 
         recordsById[_id] = { data: { ...record }, index };
-
+        recordsByEmail[email] = { data: { ...record }, index };
         output[index] = { ...record };
-      }
-
-      if (recordsByEmail[email] && _compareDates(entryDate, recordsByEmail[email].data.entryDate)) {
+      } else if (hasDuplicateEmail) {
         // If email already exists and new record has a newer or equal date
-
         const changeLogPayload = {
           oldRecord: recordsByEmail[email].data,
           newRecord: record,
@@ -86,6 +111,7 @@ function removeDuplicates(data) {
         delete output[recordsByEmail[email].index];
 
         recordsByEmail[email] = { data: { ...record }, index };
+        recordsById[_id] = { data: { ...record }, index };
         output[index] = { ...record };
       }
     }
