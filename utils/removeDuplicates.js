@@ -33,6 +33,7 @@ function removeDuplicates(data) {
 
   const recordsById = {};
   const recordsByEmail = {};
+
   const output = [];
   const log = {
     sourceRecord: data,
@@ -41,79 +42,140 @@ function removeDuplicates(data) {
 
   records.forEach((record, index) => {
     const { _id, email, entryDate } = record;
+    const hasDuplicateId = !!recordsById[_id];
+    const hasDuplicateEmail = !!recordsByEmail[email];
 
-    if (!recordsById[_id] && !recordsByEmail[email]) {
+    if (!hasDuplicateId && !hasDuplicateEmail) {
       // If both id and email are new
+
       recordsById[_id] = { data: { ...record }, index };
       recordsByEmail[email] = { data: { ...record }, index };
       output[index] = { ...record };
     } else {
-      const hasDuplicateId = recordsById[_id] && _compareDates(entryDate, recordsById[_id].data.entryDate);
-      const hasDuplicateEmail = recordsByEmail[email] && _compareDates(entryDate, recordsByEmail[email].data.entryDate);
-
       if (hasDuplicateId && hasDuplicateEmail) {
-        // If both id and email are duplicates
-        delete output[recordsById[_id].index];
-        delete output[recordsByEmail[email].index];
+        // If record contains both a duplicate id and email
 
-        log.changes.push(_writeChange({
-          oldRecord: recordsById[_id].data,
-          newRecord: record,
-          dupeProp: '_id',
-          newIndex: index,
-          oldIndex: recordsById[_id].index,
-        }));
+        const idIsGreater = _compareDates(entryDate, recordsById[_id].data.entryDate);
+        const emailIsGreater = _compareDates(entryDate, recordsByEmail[email].data.entryDate);
 
-        log.changes.push(_writeChange({
-          oldRecord: recordsByEmail[email].data,
-          newRecord: record,
-          dupeProp: 'email',
-          newIndex: index,
-          oldIndex: recordsByEmail[email].index,
-        }));
+        if (idIsGreater) {
+          // If record has a later or equal entryDate than the one in recordsById
+          delete output[recordsById[_id].index];
+          recordsById[_id] = { data: { ...record }, index };
+          output[index] = { ...record };
+        } else {
+          // If not, remove it from the output array & add the record from recordsByID
+          delete output[index];
+          output[recordsById[_id].index] = { ...recordsById[_id].data };
+        }
 
-        recordsById[_id] = { data: { ...record }, index };
-        recordsByEmail[email] = { data: { ...record }, index };
+        if (emailIsGreater) {
+          // If record has a later or equal entryDate than the one in recordsById
+          delete output[recordsByEmail[email].index];
+          recordsByEmail[email] = { data: { ...record }, index };
+          output[index] = { ...record };
+        } else {
+          delete output[index];
+          output[recordsByEmail[email].index] = { ...recordsByEmail[email].data };
+        }
 
-        output[index] = { ...record };
+        if (idIsGreater && !emailIsGreater) {
+          delete output[recordsById[_id].index];
+        }
+
+        if (emailIsGreater && !idIsGreater) {
+          delete output[recordsByEmail[email].index];
+        }
       } else if (hasDuplicateId) {
-        // If id already exists and new record has newer or equal date
-
-        const changeLogPayload = {
-          oldRecord: recordsById[_id].data,
-          newRecord: record,
-          dupeProp: '_id',
-          newIndex: index,
-          oldIndex: recordsById[_id].index,
-        };
-        log.changes.push(_writeChange(changeLogPayload));
-
-        const oldEmail = recordsById[_id].data.email;
-        delete recordsByEmail[oldEmail];
-        delete output[recordsById[_id].index];
-
-        recordsById[_id] = { data: { ...record }, index };
-        recordsByEmail[email] = { data: { ...record }, index };
-        output[index] = { ...record };
+        if (_compareDates(entryDate, recordsById[_id].data.entryDate)) {
+          const oldEmail = recordsById[_id].data.email;
+          delete recordsByEmail[oldEmail];
+          delete output[recordsById[_id].index];
+          output[index] = { ...record };
+        } else {
+          delete output[index];
+        }
       } else if (hasDuplicateEmail) {
-        // If email already exists and new record has a newer or equal date
-        const changeLogPayload = {
-          oldRecord: recordsByEmail[email].data,
-          newRecord: record,
-          dupeProp: 'email',
-          newIndex: index,
-          oldIndex: recordsByEmail[email].index,
-        };
-        log.changes.push(_writeChange(changeLogPayload));
-
-        const oldId = recordsByEmail[email].data._id;
-        delete recordsById[oldId];
-        delete output[recordsByEmail[email].index];
-
-        recordsByEmail[email] = { data: { ...record }, index };
-        recordsById[_id] = { data: { ...record }, index };
-        output[index] = { ...record };
+        if (_compareDates(entryDate, recordsByEmail[email].data.entryDate)) {
+          const oldId = recordsByEmail[email].data._id;
+          delete recordsById[oldId];
+          delete output[recordsByEmail[email].index];
+          output[index] = { ...record };
+        } else {
+          delete output[index];
+        }
       }
+
+      if (output[index]) {
+        recordsByEmail[email] = { data: { ...output[index] }, index };
+        recordsById[_id] = { data: { ...output[index] }, index };
+      }
+
+      // TODO: integrate logging functionality. use dead code below
+
+      // if (hasDuplicateId && hasDuplicateEmail) {
+      //   // If both id and email are duplicates
+      //   delete output[recordsById[_id].index];
+      //   delete output[recordsByEmail[email].index];
+
+      //   log.changes.push(_writeChange({
+      //     oldRecord: recordsById[_id].data,
+      //     newRecord: record,
+      //     dupeProp: '_id',
+      //     newIndex: index,
+      //     oldIndex: recordsById[_id].index,
+      //   }));
+
+      //   log.changes.push(_writeChange({
+      //     oldRecord: recordsByEmail[email].data,
+      //     newRecord: record,
+      //     dupeProp: 'email',
+      //     newIndex: index,
+      //     oldIndex: recordsByEmail[email].index,
+      //   }));
+
+      //   recordsById[_id] = { data: { ...record }, index };
+      //   recordsByEmail[email] = { data: { ...record }, index };
+
+      //   output[index] = { ...record };
+      // } else if (hasDuplicateId) {
+      //   // If id already exists and new record has newer or equal date
+
+      //   const changeLogPayload = {
+      //     oldRecord: recordsById[_id].data,
+      //     newRecord: record,
+      //     dupeProp: '_id',
+      //     newIndex: index,
+      //     oldIndex: recordsById[_id].index,
+      //   };
+      //   log.changes.push(_writeChange(changeLogPayload));
+
+      //   const oldEmail = recordsById[_id].data.email;
+      //   delete recordsByEmail[oldEmail];
+      //   delete output[recordsById[_id].index];
+
+      //   recordsById[_id] = { data: { ...record }, index };
+      //   recordsByEmail[email] = { data: { ...record }, index };
+      //   output[index] = { ...record };
+      // } else if (hasDuplicateEmail) {
+      //   // If email already exists and new record has a newer or equal date
+      //   const changeLogPayload = {
+      //     oldRecord: recordsByEmail[email].data,
+      //     newRecord: record,
+      //     dupeProp: 'email',
+      //     newIndex: index,
+      //     oldIndex: recordsByEmail[email].index,
+      //   };
+      //   log.changes.push(_writeChange(changeLogPayload));
+
+      //   const oldId = recordsByEmail[email].data._id;
+      //   delete recordsById[oldId];
+      //   delete output[recordsByEmail[email].index];
+
+      //   recordsByEmail[email] = { data: { ...record }, index };
+      //   recordsById[_id] = { data: { ...record }, index };
+      //   output[index] = { ...record };
+      // }
     }
   });
 
