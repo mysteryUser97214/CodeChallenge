@@ -1,0 +1,69 @@
+{"stuff": [
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "1234",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "apple@apple.com",
+  "entryDate": "2012-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "apple@apple.com",
+  "entryDate": "2013-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "sffasfsf",
+  "email": "orange@orange.com",
+  "entryDate": "2014-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "orange@orange.com",
+  "entryDate": "2015-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "banana@banana.com",
+  "entryDate": "2015-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "sffasfsf",
+  "email": "orange@orange.com",
+  "entryDate": "2021-05-07T17:33:20+00:00"
+  },
+  {
+  "_id": "ABCD",
+  "email": "orange@orange.com",
+  "entryDate": "2019-05-07T17:33:20+00:00"
+  }
+  ]
+  }
+

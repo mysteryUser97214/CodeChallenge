@@ -196,21 +196,6 @@ describe('Duplicate removal utility', () => {
     expect(results.data).toEqual(expected);
   });
 
-  it('Should handle edge case scenario', () => {
-    const results = removeDuplicates(testData.edgeCase.data);
-    expect(results.data).toEqual(testData.edgeCase.expected);
-  });
-
-  it('Should handle another edge case scenario', () => {
-    const results = removeDuplicates(testData.edgeCase2.data);
-    expect(results.data).toEqual(testData.edgeCase2.expected);
-  });
-
-  it('Should handle edge case scenario where a record has both duplicate properties', () => {
-    const results = removeDuplicates(testData.edgeCase3.data);
-    expect(results.data).toEqual(testData.edgeCase3.expected);
-  });
-
   it('Should process friends.json as expected', () => {
     const results = removeDuplicates(testData.friends.data);
     expect(results.data).toEqual(testData.friends.expected);
@@ -219,5 +204,32 @@ describe('Duplicate removal utility', () => {
   it('Should process leads.json as expected', () => {
     const results = removeDuplicates(testData.leads.data);
     expect(results.data).toEqual(testData.leads.expected);
+  });
+
+  describe('Edge Cases', () => {
+    it('Should handle _id/email collission edge case', () => {
+      const results = removeDuplicates(testData.edgeCase.data);
+      expect(results.data).toEqual(testData.edgeCase.expected);
+    });
+
+    it('Should handle edge case scenario where a record has both duplicate properties', () => {
+      const results = removeDuplicates(testData.edgeCase2.data);
+      expect(results.data).toEqual(testData.edgeCase2.expected);
+    });
+
+    it('Should handle edge case where a record has two duplicates: email entryDate is earlier, id entryDate is later', () => {
+      const results = removeDuplicates(testData.edgeCase3.data);
+      expect(results.data).toEqual(testData.edgeCase3.expected);
+    });
+
+    it('Should handle edge case where a record has two duplicates: id entryDate is earlier, email entryDate is later', () => {
+      const results = removeDuplicates(testData.edgeCase4.data);
+      expect(results.data).toEqual(testData.edgeCase4.expected);
+    });
+
+    it('Should handle all edge case records in one collection', () => {
+      const results = removeDuplicates(testData.edgeCase5.data);
+      expect(results.data).toEqual(testData.edgeCase5.expected);
+    });
   });
 });
