@@ -44,7 +44,7 @@
 
 
 
-**If dates are equal** Give preference to the latest record in the list.
+**If dates are equal:** Give preference to the latest record in the list.
 
 
 
