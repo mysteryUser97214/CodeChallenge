@@ -71,11 +71,7 @@ All records in a collection will be identical and contain at least the following
 
 "_id": <String>,
 
-
-
 "email": <String>,
-
-
 
 "entryDate": <Date>
 
@@ -104,64 +100,21 @@ As a collection is iterated through, `id`'s and `emails` are tracked through the
 
 Once I confirmed my code was working as intended, I wrote tests for edge cases that could potentially break it. For example, a scenario like this:
 
-
 ```
 record_1: {
-
-
-
 "_id": "A",
-
-
-
 "email": "banana@banana.com",
-
-
-
 "entryDate": "2015-05-07T17:33:20+00:00"
-
-
-
-}
-
-
-
-record_2: {
-
-
-
-"_id": "B",
-
-
-
-"email": "orange@orange.com",
-
-
-
-"entryDate": "2021-05-07T17:33:20+00:00"
-
-
-
 },
-
-
-
-record_3: {
-
-
-
-"_id": "A",
-
-
-
+record_2: {
+"_id": "B",
 "email": "orange@orange.com",
-
-
-
+"entryDate": "2021-05-07T17:33:20+00:00"
+},
+record_3: {
+"_id": "A",
+"email": "orange@orange.com",
 "entryDate": "2019-05-07T17:33:20+00:00"
-
-
-
 }
 ```
 
@@ -175,46 +128,20 @@ When `record_3` is processed, we initially see that `record_1` should be removed
 
 
 ```
-record_1: <removed>
-
-
-
-record_2: {
-
-
-
-"_id": "B",
-
-
-
-"email": "orange@orange.com",
-
-
-
-"entryDate": "2021-05-07T17:33:20+00:00"
-
-
-
-},
-
-
-
-record_3: {
-
-
-
+record_1: {
 "_id": "A",
-
-
-
+"email": "banana@banana.com",
+"entryDate": "2015-05-07T17:33:20+00:00"
+},
+record_2: {
+"_id": "B",
 "email": "orange@orange.com",
-
-
-
+"entryDate": "2021-05-07T17:33:20+00:00"
+},
+record_3: {
+"_id": "A",
+"email": "orange@orange.com",
 "entryDate": "2019-05-07T17:33:20+00:00"
-
-
-
 }
 ```
 
@@ -223,29 +150,11 @@ Now we compare `record_2` and `record_3` and see that `record_2` has a later `en
 
 ```
 record_1: <removed>
-
-
-
 record_2: {
-
-
-
 "_id": "B",
-
-
-
 "email": "orange@orange.com",
-
-
-
 "entryDate": "2021-05-07T17:33:20+00:00"
-
-
-
 },
-
-
-
 record_3: <removed>
 ```
 
@@ -253,16 +162,17 @@ This seems odd, because in the initial collection we can see that `record_1` and
 
 
 
-To get my algorithm to handle this edge case property, I had to a sacrifice lot of the simplicity in my initial "happy path" solution. I tried keeping it as idiomatic as possible, but it kind of feel like I went overboard with the if-operators.  I'm happy everything works, and does so in `O(n)`, though I suspect there's a better approach that I haven't found yet.
+To get my algorithm to handle this edge case property, I had to a sacrifice lot of the simplicity in my initial "happy path" solution. I tried keeping it as idiomatic as possible, but it kind of feel like I went overboard with the if-operators.  I'm happy everything works at `O(n)` complexity, though I suspect there's a better approach that I haven't found yet.
 
 
 
 ### Things I'd change
 
 
-
 - The logic for generating logs feels kind of bulky. Generally, I don't like to directly couple this logic with the function that it represents. It would probably be more scaleable if implemented as middleware.
 
 - Adding and removing elements from the `output` array seems a little weird. Mutating data goes against my React/Redux principles. If I didn't give myself the  "preserve order of the input collection" objective, I wouldn't need the array.
+
+- I'm not in love with putting the entirety of a record into the `recordsById` and `recordsByEmail` dictionaries. I like the idea of a single source of truth. Originally, I thought having dictionaries contain the index of a record instead of the whole thing. This would require an extra step when looking up the `entryDate` of a record, something like `records[indicesById[_id]].entryDate`,  but would also make the `records` array the single source of truth.
 
 - Lots of redundancy in the removeDuplicates() function. I went back and forth on keeping the code dry. There seemed to be a tradeoff between dryness and readability. I suspect there's potential to consolidate if-operators and generalize redundant functionality.
