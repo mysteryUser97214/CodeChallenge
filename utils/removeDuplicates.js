@@ -46,12 +46,12 @@ function removeDuplicates(data) {
     const hasDuplicateId = !!recordsById[_id];
     const hasDuplicateEmail = !!recordsByEmail[email];
 
+    const idIsLater = recordsById[_id] && _compareDates(entryDate, recordsById[_id].data.entryDate);
+    const emailIsLater = recordsByEmail[email] && _compareDates(entryDate, recordsByEmail[email].data.entryDate);
+
     if (!hasDuplicateId && !hasDuplicateEmail) {
       output[index] = { ...record };
     } else if (hasDuplicateId && hasDuplicateEmail) {
-      const idIsLater = _compareDates(entryDate, recordsById[_id].data.entryDate);
-      const emailIsLater = _compareDates(entryDate, recordsByEmail[email].data.entryDate);
-
       if (idIsLater && emailIsLater) {
         delete output[recordsById[_id].index];
         delete output[recordsByEmail[email].index];
@@ -73,6 +73,8 @@ function removeDuplicates(data) {
 
         output[index] = { ...record };
       } else if (idIsLater && !emailIsLater) {
+        delete output[recordsById[_id].index];
+
         log.changes.push(_writeChange({
           oldRecord: recordsById[_id].data,
           newRecord: record,
@@ -87,9 +89,9 @@ function removeDuplicates(data) {
           newIndex: index,
           oldIndex: recordsByEmail[email].index,
         }));
-
-        delete output[recordsById[_id].index];
       } else if (emailIsLater) {
+        delete output[recordsByEmail[email].index];
+
         log.changes.push(_writeChange({
           oldRecord: recordsByEmail[email].data,
           newRecord: record,
@@ -104,43 +106,35 @@ function removeDuplicates(data) {
           newIndex: index,
           oldIndex: recordsById[_id].index,
         }));
-
-        delete output[recordsByEmail[email].index];
       }
-    } else if (hasDuplicateId) {
-      const idIsLater = _compareDates(entryDate, recordsById[_id].data.entryDate);
-      if (idIsLater) {
-        const oldEmail = recordsById[_id].data.email;
-        delete recordsByEmail[oldEmail];
-        delete output[recordsById[_id].index];
+    } else if (hasDuplicateId && idIsLater) {
+      const oldEmail = recordsById[_id].data.email;
+      delete recordsByEmail[oldEmail];
+      delete output[recordsById[_id].index];
 
-        log.changes.push(_writeChange({
-          oldRecord: recordsById[_id].data,
-          newRecord: record,
-          dupeProp: '_id',
-          newIndex: index,
-          oldIndex: recordsById[_id].index,
-        }));
+      log.changes.push(_writeChange({
+        oldRecord: recordsById[_id].data,
+        newRecord: record,
+        dupeProp: '_id',
+        newIndex: index,
+        oldIndex: recordsById[_id].index,
+      }));
 
-        output[index] = { ...record };
-      }
-    } else if (hasDuplicateEmail) {
-      const emailIsLater = _compareDates(entryDate, recordsByEmail[email].data.entryDate);
-      if (emailIsLater) {
-        const oldId = recordsByEmail[email].data._id;
-        delete recordsById[oldId];
-        delete output[recordsByEmail[email].index];
+      output[index] = { ...record };
+    } else if (hasDuplicateEmail && emailIsLater) {
+      const oldId = recordsByEmail[email].data._id;
+      delete recordsById[oldId];
+      delete output[recordsByEmail[email].index];
 
-        log.changes.push(_writeChange({
-          oldRecord: recordsByEmail[email].data,
-          newRecord: record,
-          dupeProp: 'email',
-          newIndex: index,
-          oldIndex: recordsByEmail[email].index,
-        }));
+      log.changes.push(_writeChange({
+        oldRecord: recordsByEmail[email].data,
+        newRecord: record,
+        dupeProp: 'email',
+        newIndex: index,
+        oldIndex: recordsByEmail[email].index,
+      }));
 
-        output[index] = { ...record };
-      }
+      output[index] = { ...record };
     }
     // Update both dictionaries if data was set to current output index
     if (output[index]) {
