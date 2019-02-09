@@ -207,7 +207,7 @@ describe('Duplicate removal utility', () => {
   });
 
   describe('Edge Cases', () => {
-    it('Should handle _id/email collission edge case', () => {
+    it('Should handle _id/email collision edge case', () => {
       const results = removeDuplicates(testData.edgeCase.data);
       expect(results.data).toEqual(testData.edgeCase.expected);
     });
