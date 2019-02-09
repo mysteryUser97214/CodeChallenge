@@ -21,11 +21,13 @@
 
 ## How to Use
 
-1. Add any number of properly formatted `.json` files to the /input/ folder. Make sure all files in the folder are properly formatted (see "Assumptions" section below). Input folder contains `leads.json` by default.
+1. Add any number of `.json` files to the /input/ folder. Make sure all files in the folder are properly formatted (see "Assumptions" section below). Input folder contains `leads.json` by default.
 
 2. `npm start`
 
 3. Converted `json` file and a corresponding `<filename>.json.log` file will be written to the /output/ folder.
+
+- To run tests: `npm test`
 
 
 
@@ -128,11 +130,7 @@ When `record_3` is processed, we initially see that `record_1` should be removed
 
 
 ```
-record_1: {
-"_id": "A",
-"email": "banana@banana.com",
-"entryDate": "2015-05-07T17:33:20+00:00"
-},
+record_1: <removed>,
 record_2: {
 "_id": "B",
 "email": "orange@orange.com",
